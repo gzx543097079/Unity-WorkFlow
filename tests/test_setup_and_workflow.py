@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / '.agents/skills/unity-ios-team-flow/scripts/setup_project.py'
+SOURCE = ROOT / '.agents/skills/unity-work-flow/scripts/setup_project.py'
 spec = importlib.util.spec_from_file_location('unity_setup', SOURCE)
 setup = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(setup)
@@ -20,8 +20,8 @@ class SetupAndWorkflowTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         subprocess.run(['git', 'init', '-q', str(self.root)], check=True)
-        skill = self.root / '.agents/skills/unity-ios-team-flow'
-        shutil.copytree(ROOT / '.agents/skills/unity-ios-team-flow', skill)
+        skill = self.root / '.agents/skills/unity-work-flow'
+        shutil.copytree(ROOT / '.agents/skills/unity-work-flow', skill)
 
     def tearDown(self):
         self.temp.cleanup()
@@ -30,7 +30,7 @@ class SetupAndWorkflowTests(unittest.TestCase):
         (self.root / 'AGENTS.md').write_text('# Existing\n')
         (self.root / '.agents/project-checks.json').write_text('{"custom": true}\n')
         with contextlib.redirect_stdout(io.StringIO()):
-            setup.setup(self.root, self.root / '.agents/skills/unity-ios-team-flow')
+            setup.setup(self.root, self.root / '.agents/skills/unity-work-flow')
         agents = (self.root / 'AGENTS.md').read_text()
         self.assertIn('# Existing', agents)
         self.assertEqual(1, agents.count(setup.START))
@@ -52,7 +52,7 @@ class SetupAndWorkflowTests(unittest.TestCase):
         self.assertEqual('6000.1.12f1', report['unity_version'])
 
     def test_skill_routes_all_references_and_has_no_scaffold_todos(self):
-        skill = ROOT / '.agents/skills/unity-ios-team-flow'
+        skill = ROOT / '.agents/skills/unity-work-flow'
         text = (skill / 'SKILL.md').read_text()
         self.assertNotIn('[TODO', text)
         for name in ('WORKFLOW', 'UNITY-PROJECT', 'ASSETS', 'TESTING', 'PERFORMANCE',
@@ -63,7 +63,7 @@ class SetupAndWorkflowTests(unittest.TestCase):
         self.assertIn('Privacy Manifest', release)
 
     def test_upstream_sync_baseline_is_exact(self):
-        upstream = (ROOT / '.agents/skills/unity-ios-team-flow/references/UPSTREAM.md').read_text()
+        upstream = (ROOT / '.agents/skills/unity-work-flow/references/UPSTREAM.md').read_text()
         self.assertIn('teamflow-v3.1.2', upstream)
         self.assertIn('1217f4b7b2957bd57c649570408a9ff05045cff9', upstream)
         self.assertIn('1217f4b7b2957bd57c649570408a9ff05045cff9..目标提交', upstream)

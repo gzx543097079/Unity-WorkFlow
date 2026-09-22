@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / '.agents/skills/unity-ios-team-flow/scripts/project_checks.py'
+SOURCE = ROOT / '.agents/skills/unity-work-flow/scripts/project_checks.py'
 spec = importlib.util.spec_from_file_location('unity_project_checks', SOURCE)
 checks = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(checks)

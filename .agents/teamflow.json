@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "skill": "unity-ios-team-flow",
-  "version": "1.0.1",
+  "skill": "unity-work-flow",
+  "version": "1.0.2",
   "instruction_file": "AGENTS.md"
 }

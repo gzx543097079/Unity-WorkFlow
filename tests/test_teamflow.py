@@ -8,7 +8,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / '.agents/skills/unity-ios-team-flow/scripts/teamflow.py'
+SOURCE = ROOT / '.agents/skills/unity-work-flow/scripts/teamflow.py'
 spec = importlib.util.spec_from_file_location('unity_teamflow', SOURCE)
 flow = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(flow)
@@ -18,9 +18,9 @@ class TeamFlowTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
-        skill = self.root / '.agents/skills/unity-ios-team-flow'
+        skill = self.root / '.agents/skills/unity-work-flow'
         (skill / 'references').mkdir(parents=True)
-        shutil.copytree(ROOT / '.agents/skills/unity-ios-team-flow/references/templates',
+        shutil.copytree(ROOT / '.agents/skills/unity-work-flow/references/templates',
                         skill / 'references/templates')
 
     def tearDown(self):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""把 Unity iOS TeamFlow 接入当前 Git 根；不修改 Unity 业务内容。"""
+"""把 unity-work-flow 接入当前 Git 根；不修改 Unity 业务内容。"""
 import argparse
 import base64
 import json
@@ -9,12 +9,12 @@ import subprocess
 import sys
 from pathlib import Path
 
-START = '<!-- unity-ios-team-flow:start -->'
-END = '<!-- unity-ios-team-flow:end -->'
-BLOCK = '''<!-- unity-ios-team-flow:start -->
+START = '<!-- unity-work-flow:start -->'
+END = '<!-- unity-work-flow:end -->'
+BLOCK = '''<!-- unity-work-flow:start -->
 ## Unity iOS 工作流
 
-本项目使用 `.agents/skills/unity-ios-team-flow/SKILL.md`。开发变更维护一张需求卡和一份验证证据；问答、检查和只读分析不建卡。
+本项目使用 `.agents/skills/unity-work-flow/SKILL.md`。开发变更维护一张需求卡和一份验证证据；问答、检查和只读分析不建卡。
 项目空间是当前 Git 根及其目录树；处理空间外对象前先说明并取得用户本次明确允许。
 不得猜测或擅自升级 Unity Editor、渲染管线、Package、Xcode 设置、签名或最低 iOS 版本；以项目锁定值为准。
 有实现与交付的任务按“完成全部改动 → 环境预检 → 针对性测试 → 文件冻结 → 一次完整验证 → 目标交付”执行。
@@ -22,14 +22,14 @@ BLOCK = '''<!-- unity-ios-team-flow:start -->
 commit、push、标签、GitHub Release，以及 Xcode 导出、Archive、TestFlight、审核、发布和下架只在用户明确目标时执行；只补齐不可缺少的前置。
 普通 TestFlight 上传不启用 TestFlight Internal Only；只有明确要求仅内部测试时才设置 `testFlightInternalTestingOnly: true`。
 使用 `python3 scripts/teamflow.py` 处理需求、验证和显式动作。未经明确指令不提交、不上传、不提审、不发布。
-<!-- unity-ios-team-flow:end -->
+<!-- unity-work-flow:end -->
 '''
 ENTRY = '''#!/usr/bin/env python3
-"""从项目内 Skill 加载 Unity iOS TeamFlow 唯一实现。"""
+"""从项目内 Skill 加载 unity-work-flow 唯一实现。"""
 import runpy
 from pathlib import Path
 
-_source = Path(__file__).resolve().parents[1] / '.agents/skills/unity-ios-team-flow/scripts/teamflow.py'
+_source = Path(__file__).resolve().parents[1] / '.agents/skills/unity-work-flow/scripts/teamflow.py'
 globals().update(runpy.run_path(str(_source), run_name=__name__))
 '''
 EMPTY_CHECKS = {'schema_version': 1, 'checks': {}, 'profiles': {},
@@ -65,9 +65,9 @@ def agents_content(current):
 
 def plan(project, skill):
     project, skill = project.expanduser().resolve(), skill.resolve()
-    expected = project / '.agents/skills/unity-ios-team-flow'
+    expected = project / '.agents/skills/unity-work-flow'
     if skill != expected or not (skill / 'SKILL.md').is_file():
-        raise ValueError('请先把完整 Skill 放到 .agents/skills/unity-ios-team-flow')
+        raise ValueError('请先把完整 Skill 放到 .agents/skills/unity-work-flow')
     version = (skill / 'references/VERSION').read_text().strip()
     version_tuple(version)
     manifest_path = safe(project, '.agents/teamflow.json')
@@ -78,7 +78,7 @@ def plan(project, skill):
         'AGENTS.md': agents_content(agents.read_text() if agents.exists() else '').encode(),
         'scripts/teamflow.py': ENTRY.encode(),
         '.agents/teamflow.json': (json.dumps(
-            {'schema_version': 2, 'skill': 'unity-ios-team-flow', 'version': version,
+            {'schema_version': 2, 'skill': 'unity-work-flow', 'version': version,
              'instruction_file': 'AGENTS.md'}, ensure_ascii=False, indent=2) + '\n').encode(),
     }
     checks = safe(project, '.agents/project-checks.json')
@@ -97,7 +97,7 @@ def setup(project, skill, dry_run=False):
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
     safe(project, 'requirements').mkdir(exist_ok=True)
-    print('项目已接入 unity-ios-team-flow：' + str(project))
+    print('项目已接入 unity-work-flow：' + str(project))
 
 
 def unity_version(project):

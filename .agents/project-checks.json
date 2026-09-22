@@ -15,7 +15,7 @@
     "docs": ["workflow-validation"]
   },
   "inputs": [
-    ".agents/skills/unity-ios-team-flow",
+    ".agents/skills/unity-work-flow",
     ".agents/project-checks.json",
     ".agents/teamflow.json",
     "AGENTS.md",

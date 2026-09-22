@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""按显式清单生成可重复的 Unity TeamFlow ZIP，不包含项目数据。"""
+"""按显式清单生成可重复的 unity-work-flow ZIP，不包含项目数据。"""
 import hashlib
 import re
 import zipfile
 from pathlib import Path
 
-SKILL = '.agents/skills/unity-ios-team-flow'
+SKILL = '.agents/skills/unity-work-flow'
 REFERENCES = (
     'APP-RELEASE.md', 'ARCHITECTURE.md', 'ASSETS.md', 'BUGFIX.md', 'EXISTING-PROJECT.md',
     'GIT-ACTIONS.md', 'IOS-INTEGRATION.md', 'LOCALIZATION.md', 'PERFORMANCE.md',
@@ -64,7 +64,7 @@ def package(root):
     names = validated_files(root, FILES)
     output = root / 'dist'
     output.mkdir(exist_ok=True)
-    target = output / ('Unity-iOS-TeamFlow-v' + version(root) + '.zip')
+    target = output / ('unity-work-flow-v' + version(root) + '.zip')
     return write_archive(root, target, [(name, name) for name in names])
 
 
@@ -73,10 +73,10 @@ def package_skill(root):
     names = validated_files(root, [name for name in FILES if name.startswith(SKILL + '/')])
     output = root / 'dist'
     output.mkdir(exist_ok=True)
-    target = output / ('unity-ios-team-flow-skill-v' + version(root) + '.zip')
+    target = output / ('unity-work-flow-skill-v' + version(root) + '.zip')
     prefix = SKILL + '/'
     return write_archive(root, target,
-                         [(name, 'unity-ios-team-flow/' + name[len(prefix):]) for name in names])
+                         [(name, 'unity-work-flow/' + name[len(prefix):]) for name in names])
 
 
 if __name__ == '__main__':

@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / '.agents/skills/unity-ios-team-flow'
+SKILL = ROOT / '.agents/skills/unity-work-flow'
 
 
 def main():
@@ -28,7 +28,7 @@ def main():
         raise SystemExit('\n'.join(errors))
     version = (SKILL / 'references/VERSION').read_text().strip()
     manifest = json.loads((ROOT / '.agents/teamflow.json').read_text())
-    if manifest.get('skill') != 'unity-ios-team-flow' or manifest.get('version') != version:
+    if manifest.get('skill') != 'unity-work-flow' or manifest.get('version') != version:
         errors.append('teamflow manifest 与 Skill 版本不一致')
     if version not in (ROOT / 'README.md').read_text():
         errors.append('README 未体现当前版本：' + version)
@@ -58,10 +58,23 @@ def main():
         if value not in upstream:
             errors.append('上游同步基线缺少：' + value)
     readme = (ROOT / 'README.md').read_text()
-    for value in ('Python 3.10+', '.agents/skills/unity-ios-team-flow/', 'setup_project.py --project .',
-                  'unity-ios-team-flow-skill-v' + version + '.zip', 'shasum -a 256'):
+    for value in ('Python 3.10+', '.agents/skills/unity-work-flow/', 'setup_project.py --project .',
+                  'unity-work-flow-skill-v' + version + '.zip', 'shasum -a 256'):
         if value not in readme:
             errors.append('README 安装说明缺少：' + value)
+    retired_name = 'unity-' + 'ios-team-flow'
+    sources = [ROOT / 'AGENTS.md', ROOT / 'README.md', ROOT / '.agents/teamflow.json',
+               ROOT / '.agents/project-checks.json']
+    for directory in (SKILL, ROOT / 'scripts', ROOT / 'tests'):
+        sources.extend(path for path in directory.rglob('*') if path.is_file()
+                       and '__pycache__' not in path.parts)
+    for path in sources:
+        try:
+            content = path.read_text()
+        except UnicodeDecodeError:
+            continue
+        if retired_name in content:
+            errors.append('仍包含已停用的 Skill 名称：' + str(path.relative_to(ROOT)))
     if errors:
         raise SystemExit('\n'.join(errors))
     print('工作流结构、路由、版本、模板与 Unity/iOS 关键规则校验通过')

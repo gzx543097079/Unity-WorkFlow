@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unity iOS TeamFlow：需求、验证、提交检查与显式发布动作记录。"""
+"""unity-work-flow：需求、验证、提交检查与显式发布动作记录。"""
 import argparse
 import contextlib
 import importlib.util

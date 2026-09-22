@@ -24,15 +24,17 @@ class PackagingTests(unittest.TestCase):
 
     def test_skill_package_has_installable_layout_and_checksum(self):
         archive = packager.package_skill(ROOT)
+        self.assertEqual('unity-work-flow-skill-v1.0.2.zip', archive.name)
         copied = self.root / archive.name
         shutil.copy2(archive, copied)
         digest = hashlib.sha256(copied.read_bytes()).hexdigest()
         self.assertEqual(digest, archive.with_suffix('.zip.sha256').read_text().split()[0])
         with zipfile.ZipFile(copied) as stream:
             names = set(stream.namelist())
-            self.assertIn('unity-ios-team-flow/SKILL.md', names)
-            self.assertIn('unity-ios-team-flow/scripts/setup_project.py', names)
+            self.assertIn('unity-work-flow/SKILL.md', names)
+            self.assertIn('unity-work-flow/scripts/setup_project.py', names)
             self.assertFalse(any(name.startswith('.agents/') for name in names))
+            self.assertTrue(all(name.startswith('unity-work-flow/') for name in names))
 
     def test_extracted_skill_can_setup_a_project(self):
         archive = packager.package_skill(ROOT)
@@ -42,14 +44,16 @@ class PackagingTests(unittest.TestCase):
         with zipfile.ZipFile(archive) as stream:
             stream.extractall(skill_root)
         subprocess.run(['git', 'init', '-q', str(project)], check=True)
-        setup = skill_root / 'unity-ios-team-flow/scripts/setup_project.py'
+        setup = skill_root / 'unity-work-flow/scripts/setup_project.py'
         result = subprocess.run(['python3', str(setup), '--project', str(project), '--plan'],
                                 capture_output=True, text=True)
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertIn('AGENTS.md', result.stdout)
 
     def test_archives_are_reproducible(self):
-        first = packager.package(ROOT).read_bytes()
+        archive = packager.package(ROOT)
+        self.assertEqual('unity-work-flow-v1.0.2.zip', archive.name)
+        first = archive.read_bytes()
         second = packager.package(ROOT).read_bytes()
         self.assertEqual(first, second)
 
