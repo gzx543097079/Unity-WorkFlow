@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "unit-tests": {
+      "argv": ["python3", "-m", "unittest", "discover", "-s", "tests", "-v"],
+      "timeout_seconds": 300
+    },
+    "workflow-validation": {
+      "argv": ["python3", "scripts/validate_workflow.py"],
+      "timeout_seconds": 60
+    }
+  },
+  "profiles": {
+    "change": ["unit-tests", "workflow-validation"],
+    "docs": ["workflow-validation"]
+  },
+  "inputs": [
+    ".agents/skills/unity-ios-team-flow",
+    ".agents/project-checks.json",
+    ".agents/teamflow.json",
+    "AGENTS.md",
+    "README.md",
+    "requirements",
+    "scripts",
+    "tests"
+  ]
+}

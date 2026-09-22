@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unity iOS TeamFlow"
+  short_description: "Unity 游戏面向 iOS 的开发、验证与发布工作流"
+  default_prompt: "使用 $unity-ios-team-flow 按需求卡、Unity 验证门禁和 iOS 发布边界完成当前任务。"
