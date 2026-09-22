@@ -22,6 +22,7 @@ description: 中文 Unity 游戏需求、实现、验证与显式交付工作流
 | 用户明确要求 commit、push、标签或 GitHub Release | [Git 动作](references/GIT-ACTIONS.md) |
 | 用户明确要求导出 Xcode、Archive、TestFlight、审核、发布或下架 | [App 发布](references/APP-RELEASE.md) |
 | 对照或同步 iOS TeamFlow 上游逻辑 | [上游同步基线](references/UPSTREAM.md) |
+| 发布 Unity TeamFlow 源码或 ZIP | [工作流源码分发](references/RELEASE.md) |
 
 问答、检查和只读分析不建需求卡。开发变更使用 `python3 scripts/teamflow.py req create --title "标题"` 建立唯一需求卡，同一需求续接原卡。状态、范围、AC 与验证证据只在该卡维护。
 

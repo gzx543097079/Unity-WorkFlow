@@ -1,6 +1,6 @@
 # Unity iOS TeamFlow
 
-面向 Codex 驱动开发的中文 Unity 游戏工作流，优先覆盖 iOS 市场，同时保留 Unity 项目跨平台的基本边界。当前版本为 **1.0.0**。
+面向 Codex 驱动开发的中文 Unity 游戏工作流，优先覆盖 iOS 市场，同时保留 Unity 项目跨平台的基本边界。当前版本为 **1.0.1**。
 
 它不是 Unity 工程模板，而是一套可安装到现有游戏仓库的协作规则和验证工具：用一张需求卡管理范围与验收条件，用项目真实命令生成可追溯验证证据，并把 Git、Xcode、TestFlight 和 App Store 动作限制在用户明确授权的目标内。
 
@@ -53,22 +53,38 @@ flowchart TD
 - IAP、Game Center、推送、ATT、广告、分析、崩溃上报和原生 SDK 分别验证沙盒、隐私、生命周期和弱网/中断行为。
 - 用户可见文本走 Unity Localization（或项目既有方案），代码、Prefab 和场景不直接散落最终文案。
 
-## 安装到 Unity 项目
+## 安装
 
-将完整目录复制到目标 Git 根：
+环境需要 Python 3.10+、Git、项目锁定版本的 Unity Editor 与 iOS Build Support；iOS 构建还需要 macOS/Xcode。将完整 Skill 放入项目：
 
 ```text
 .agents/skills/unity-ios-team-flow/
 ```
 
-然后执行：
+从项目 Git 根执行：
 
 ```sh
 python3 .agents/skills/unity-ios-team-flow/scripts/setup_project.py --project .
+```
+
+接入脚本会生成 `AGENTS.md` 托管区块、`.agents/teamflow.json` 和 `scripts/teamflow.py`，创建 `requirements/`，并在缺失时创建空的 `.agents/project-checks.json`。它不迁移旧需求卡或旧 CLI，也不会修改 `Assets`、`Packages` 或 `ProjectSettings`。
+
+安装后可执行只读诊断，并把验证配置替换为项目真实、可在无交互模式运行的命令：
+
+```sh
 python3 .agents/skills/unity-ios-team-flow/scripts/setup_project.py --project . --doctor
 ```
 
-接入脚本创建 `AGENTS.md` 托管区块、`scripts/teamflow.py`、`.agents/teamflow.json` 和空的验证配置（若不存在）。随后把 `.agents/project-checks.json` 中的示例替换为项目真实、可在无交互模式运行的命令。
+GitHub Release 同时提供独立 Skill 包 `unity-ios-team-flow-skill-v版本.zip` 和 SHA256。下载后在目标项目 Git 根执行：
+
+```sh
+shasum -a 256 -c unity-ios-team-flow-skill-v1.0.1.zip.sha256
+mkdir -p .agents/skills
+unzip unity-ios-team-flow-skill-v1.0.1.zip -d .agents/skills
+python3 .agents/skills/unity-ios-team-flow/scripts/setup_project.py --project .
+```
+
+完整仓库包用于开发工作流本身；接入业务 Unity 项目只需要独立 Skill 包。
 
 ## 常用命令
 
@@ -100,4 +116,6 @@ python3 scripts/teamflow.py git check REQ-0001 \
 
 ## 上游同步基线
 
-Unity 工作流 1.0.0 基于 iOS TeamFlow **3.1.2**（标签 `teamflow-v3.1.2`，提交 `1217f4b7b2957bd57c649570408a9ff05045cff9`）设计。完整来源、差异边界和下次同步步骤见 [UPSTREAM](.agents/skills/unity-ios-team-flow/references/UPSTREAM.md)。
+Unity 工作流 1.0.1 继续基于 iOS TeamFlow **3.1.2**（标签 `teamflow-v3.1.2`，提交 `1217f4b7b2957bd57c649570408a9ff05045cff9`）设计。完整来源、差异边界和下次同步步骤见 [UPSTREAM](.agents/skills/unity-ios-team-flow/references/UPSTREAM.md)。
+
+工作流源码与 ZIP 分发规则见 [RELEASE](.agents/skills/unity-ios-team-flow/references/RELEASE.md)。

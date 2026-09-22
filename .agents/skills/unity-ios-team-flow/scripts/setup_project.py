@@ -115,7 +115,7 @@ def diagnose(project):
     def add(name, ready, detail):
         items.append({'item': name, 'status': '就绪' if ready else '需处理', 'detail': detail})
 
-    add('Python', sys.version_info >= (3, 9), sys.version.split()[0])
+    add('Python', sys.version_info >= (3, 10), sys.version.split()[0])
     try:
         top = subprocess.check_output(['git', '-C', str(project), 'rev-parse', '--show-toplevel'], text=True).strip()
         git_ready = Path(top).resolve() == project
